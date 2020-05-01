@@ -1,61 +1,65 @@
 {
-    "name": "butler",
-    "version": "3.1.0",
-    "description": "Microservice providing features that Qlik Sense or Qlikview cannot do out of the box.",
-    "docs": "node_modules/.bin/docco {mqtt,qrs}/{**/*,*} -l classic",
-    "dependencies": {
-        "any-base": "^1.1.0",
-        "axios": "^0.19.2",
-        "config": "^3.2.4",
-        "dict": "^1.4.0",
-        "enigma.js": "^2.6.3",
-        "fs-extra": "^8.1.0",
-        "js-yaml": "^3.13.1",
-        "jshint": "^2.10.3",
-        "later": "^1.2.0",
-        "mkdirp": "^1.0.3",
-        "mqtt": "^3.0.0",
-        "node-slack": "0.0.7",
-        "promise": "^8.0.3",
-        "restify": "^8.4.1",
-        "restify-cors-middleware": "^1.1.1",
-        "restify-errors": "^8.0.1",
-        "serializeapp": "^3.0.0",
-        "winston": "^3.2.1",
-        "winston-daily-rotate-file": "^4.3.0",
-        "ws": "^7.2.0"
-    },
-    "devDependencies": {
-        "eslint": "6.8.0",
-        "eslint-config-google": "0.14.0"
-    },
-    "homepage": "https://github.com/ptarmiganlabs/butler",
-    "author": "Göran Sander",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ptarmiganlabs/butler.git"
-    },
-    "keywords": [
-        "butler",
-        "senseops",
-        "devops",
-        "qliksense"
-    ],
-    "bugs": {
-        "url": "https://github.com/ptarmiganlabs/butler/issues"
-    },
-    "license": "MIT",
-    "files": [
-        "butler.js"
-    ],
-    "main": "butler.js",
-    "engines": {
-        "node": ">=0.10.0"
-    },
-    "scripts": {
-        "test": "node_modules/jshint/bin/jshint butler.js",
-        "format1": "npm run format",
-        "format": "npm run format:prettier",
-        "format:prettier": "npx prettier --config .prettierrc \"./**/*.{ts,css,less,js}\" --write"
-    }
+  "name": "butler",
+  "version": "3.1.0",
+  "description": "Microservice providing features that Qlik Sense or Qlikview cannot do out of the box.",
+  "docs": "node_modules/.bin/docco {mqtt,qrs}/{**/*,*} -l classic",
+  "dependencies": {
+    "any-base": "^1.1.0",
+    "axios": "^0.19.2",
+    "config": "^3.2.4",
+    "dict": "^1.4.0",
+    "enigma.js": "^2.6.3",
+    "fs-extra": "^8.1.0",
+    "js-yaml": "^3.13.1",
+    "jshint": "^2.10.3",
+    "later": "^1.2.0",
+    "mkdirp": "^1.0.3",
+    "mqtt": "^3.0.0",
+    "node-slack": "0.0.7",
+    "promise": "^8.0.3",
+    "restify": "^8.4.1",
+    "restify-cors-middleware": "^1.1.1",
+    "restify-errors": "^8.0.1",
+    "serializeapp": "^3.0.0",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.3.0",
+    "ws": "^7.2.0",
+    "snyk": "^1.316.1"
+  },
+  "devDependencies": {
+    "eslint": "6.8.0",
+    "eslint-config-google": "0.14.0"
+  },
+  "homepage": "https://github.com/ptarmiganlabs/butler",
+  "author": "Göran Sander",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ptarmiganlabs/butler.git"
+  },
+  "keywords": [
+    "butler",
+    "senseops",
+    "devops",
+    "qliksense"
+  ],
+  "bugs": {
+    "url": "https://github.com/ptarmiganlabs/butler/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "butler.js"
+  ],
+  "main": "butler.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "node_modules/jshint/bin/jshint butler.js",
+    "format1": "npm run format",
+    "format": "npm run format:prettier",
+    "format:prettier": "npx prettier --config .prettierrc \"./**/*.{ts,css,less,js}\" --write",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
+  },
+  "snyk": true
 }
