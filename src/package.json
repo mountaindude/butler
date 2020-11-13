@@ -27,7 +27,7 @@
         "mqtt": "^4.2.4",
         "ms-teams-webhook": "^1.0.3",
         "node-slack": "0.0.7",
-        "nodemailer": "^6.4.14",
+        "nodemailer": "^6.4.16",
         "nodemailer-express-handlebars": "^4.0.0",
         "promise": "^8.0.3",
         "qrs-interact": "^6.1.0",
