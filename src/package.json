@@ -12,7 +12,7 @@
         "enigma.js": "^2.7.2",
         "express-handlebars": "^5.2.0",
         "fs-extra": "^9.1.0",
-        "handlebars": "^4.7.6",
+        "handlebars": "^4.7.7",
         "influx": "^5.7.0",
         "js-yaml": "^4.0.0",
         "jshint": "^2.12.0",
