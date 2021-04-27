@@ -20,5 +20,6 @@ module.exports = {
     keyValueStore: require('./keyValueStore.js'),
     disk_utils: require('./disk_utils.js'),
     api: require('./api.js'),
+    bookmarks: require('./bookmarks.js'),
 };
 // getDiskSpace: require('./getDiskSpace.js'),

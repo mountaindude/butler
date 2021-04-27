@@ -99,6 +99,20 @@ const configQRS = {
     },
 };
 
+// QPS config
+const configQPS = {
+    host: config.get('Butler.configQPS.host'),
+    virtualProxy: config.get('Butler.configQPS.virtualProxy'),
+    cert: readCert(certPath),
+    key: readCert(keyPath),
+    ca: readCert(caPath),
+    certPaths: {
+        certPath: certPath,
+        keyPath: keyPath,
+        capath: caPath,
+    },
+};
+
 // ------------------------------------
 // MS Teams reload task failed
 if (
@@ -251,6 +265,15 @@ if (config.has('Butler.fileDeleteApprovedDirectories') && config.get('Butler.fil
     });
 }
 
+// // Load bookmarks config into global variable
+// var configBookmark={};
+// if (config.has('Butler.bookmark') && config.get('Butler.bookmark') != null) {
+//     configBookmark = {
+//         host: config.get('Butler.bookmark.host'),
+//         virtualProxy: config.get('Butler.bookmark.virtualProxy'),
+//     };
+// }
+
 // Create list of enabled API endpoints
 var endpointsEnabled = [];
 
@@ -345,8 +368,6 @@ function initInfluxDB() {
     }
 }
 
-
-
 // Anon telemetry reporting
 var hostInfo;
 
@@ -365,7 +386,7 @@ async function initHostInfo() {
         let networkInterface = siNetwork.filter(item => {
             return item.iface === defaultNetworkInterface;
         });
-    
+
         let idSrc = networkInterface[0].mac + networkInterface[0].ip4 + config.get('Butler.configQRS.host') + siSystem.uuid;
         let salt = networkInterface[0].mac;
         let hash = crypto.createHmac('sha256', salt);
@@ -376,7 +397,7 @@ async function initHostInfo() {
             id: id,
             node: {
                 nodeVersion: process.version,
-                versions: process.versions
+                versions: process.versions,
             },
             os: {
                 platform: os.platform(),
@@ -385,7 +406,7 @@ async function initHostInfo() {
                 arch: os.arch(),
                 cpuCores: os.cpus().length,
                 type: os.type(),
-                totalmem: os.totalmem()
+                totalmem: os.totalmem(),
             },
             si: {
                 cpu: siCPU,
@@ -410,6 +431,7 @@ module.exports = {
     config,
     configEngine,
     configQRS,
+    configQPS,
     teamsTaskFailureObj,
     teamsTaskAbortedObj,
     teamsUserSessionObj,

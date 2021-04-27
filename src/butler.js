@@ -292,7 +292,7 @@ if (globals.config.has('Butler.scheduler.enable') && globals.config.get('Butler.
         globals.config.has('Butler.restServerEndpointsEnable.scheduler.deleteSchedule') &&
         globals.config.get('Butler.restServerEndpointsEnable.scheduler.deleteSchedule')
     ) {
-        globals.logger.debug('Registering REST endpoint DELETE /v4/schedules');
+        globals.logger.debug('Registering REST endpoint DELETE /v4/schedules/:scheduleId');
 
         restServer.del({ path: '/v4/schedules/:scheduleId' }, rest.scheduler.respondDELETE_schedules);
     }
@@ -301,7 +301,7 @@ if (globals.config.has('Butler.scheduler.enable') && globals.config.get('Butler.
         globals.config.has('Butler.restServerEndpointsEnable.scheduler.startSchedule') &&
         globals.config.get('Butler.restServerEndpointsEnable.scheduler.startSchedule')
     ) {
-        globals.logger.debug('Registering REST endpoint POST /v4/schedulestart');
+        globals.logger.debug('Registering REST endpoint PUT /v4/schedules/:scheduleId/start');
 
         restServer.put({ path: '/v4/schedules/:scheduleId/start' }, rest.scheduler.respondPUT_schedulesStart);
     }
@@ -310,11 +310,33 @@ if (globals.config.has('Butler.scheduler.enable') && globals.config.get('Butler.
         globals.config.has('Butler.restServerEndpointsEnable.scheduler.stopSchedule') &&
         globals.config.get('Butler.restServerEndpointsEnable.scheduler.stopSchedule')
     ) {
-        globals.logger.debug('Registering REST endpoint POST /v4/schedulestop');
+        globals.logger.debug('Registering REST endpoint PUT /v4/schedules/:scheduleId/stop');
 
         restServer.put({ path: '/v4/schedules/:scheduleId/stop' }, rest.scheduler.respondPUT_schedulesStop);
     }
 }
+
+if (globals.config.has('Butler.bookmark.enable') && globals.config.get('Butler.bookmark.enable')) {
+    if (
+        globals.config.has('Butler.restServerEndpointsEnable.bookmark.getBookmarkList') &&
+        globals.config.get('Butler.restServerEndpointsEnable.bookmark.getBookmarkList')
+    ) {
+        globals.logger.debug('Registering REST endpoint GET /v4/bookmarks/:appId');
+        restServer.get({ path: '/v4/bookmarks/:appId' }, rest.bookmarks.respondGET_bookmarksAppUser);
+    }
+
+    // globals.logger.debug('Registering REST endpoint GET /v4/bookmarks/:appId/:userDirectory/:userId');
+    // restServer.get({ path: '/v4/bookmarks/:appId/:userDirectory/:userId' }, rest.bookmarks.respondGET_bookmarksAppDirUser);
+
+    if (
+        globals.config.has('Butler.restServerEndpointsEnable.bookmark.applyBookmark') &&
+        globals.config.get('Butler.restServerEndpointsEnable.bookmark.applyBookmark')
+    ) {
+        globals.logger.debug('Registering REST endpoint PUT /v4/applybookmark/:bookmarkId');
+        restServer.put({ path: '/v4/applybookmark/:bookmarkId' }, rest.bookmarks.respondPUT_applyBookmark);
+    }
+}
+
 
 // ---------------------------------------------------
 // Set up MQTT
