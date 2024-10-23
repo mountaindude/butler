@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import handlebars from 'handlebars';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 

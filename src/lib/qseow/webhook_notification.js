@@ -1,7 +1,7 @@
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import axios from 'axios';
-import fs from 'fs';
-import https from 'https';
+import fs from 'node:fs';
+import https from 'node:https';
 
 import globals from '../../globals.js';
 import getAppOwner from '../../qrs_util/get_app_owner.js';

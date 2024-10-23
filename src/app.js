@@ -1,10 +1,10 @@
 /* eslint-disable prefer-object-spread */
 /* eslint-disable global-require */
 
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs';
 import handlebars from 'handlebars';
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
 
 import Fastify from 'fastify';
@@ -12,7 +12,7 @@ import Fastify from 'fastify';
 import FastifySwagger from '@fastify/swagger';
 import FastifySwaggerUi from '@fastify/swagger-ui';
 import FastifyReplyFrom from '@fastify/reply-from';
-import FastifyHealthcheck from 'fastify-healthcheck';
+// import FastifyHealthcheck from 'fastify-healthcheck';
 import FastifyRateLimit from '@fastify/rate-limit';
 import FastifyStatic from '@fastify/static';
 
@@ -182,7 +182,7 @@ async function build(opts = {}) {
 
         // This loads all plugins defined in plugins.
         // Those should be support plugins that are reused through your application
-        await restServer.register(import('./plugins/sensible.js'), { options: Object.assign({}, opts) });
+        // await restServer.register(import('./plugins/sensible.js'), { options: Object.assign({}, opts) });
         await restServer.register(import('./plugins/support.js'), { options: Object.assign({}, opts) });
 
         await restServer.register(FastifySwagger, {
@@ -325,7 +325,7 @@ async function build(opts = {}) {
 
         // This loads all plugins defined in plugins.
         // Those should be support plugins that are reused through your application
-        await configVisServer.register(import('./plugins/sensible.js'), { options: Object.assign({}, opts) });
+        // await configVisServer.register(import('./plugins/sensible.js'), { options: Object.assign({}, opts) });
         await configVisServer.register(import('./plugins/support.js'), { options: Object.assign({}, opts) });
 
         // Create absolute path to the html directory
@@ -397,7 +397,8 @@ async function build(opts = {}) {
         }
     }
 
-    await dockerHealthCheckServer.register(FastifyHealthcheck);
+    // TODO disabling this for now, need rewrite wrt Deno
+    // await dockerHealthCheckServer.register(FastifyHealthcheck);
 
     return { restServer, proxyRestServer, dockerHealthCheckServer, configVisServer };
 }

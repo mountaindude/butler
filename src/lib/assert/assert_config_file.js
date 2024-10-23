@@ -1,6 +1,6 @@
 import QrsInteract from 'qrs-interact';
 import { load } from 'js-yaml';
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 import { default as Ajv } from 'ajv';
 
 import { getReloadTasksCustomProperties } from '../../qrs_util/task_cp_util.js';

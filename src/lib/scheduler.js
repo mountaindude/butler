@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import yaml from 'js-yaml';
 import CronJobManager from 'cron-job-manager';
 import globals from '../globals.js';

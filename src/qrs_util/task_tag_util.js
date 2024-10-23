@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import QrsInteract from 'qrs-interact';
 import globals from '../globals.js';
 

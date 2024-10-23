@@ -4,10 +4,45 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Debug using Deno",
+        "program": "${workspaceFolder}/src/butler.js",
+        "cwd": "${workspaceFolder}/src",
+        "env": {
+          "NODE_CONFIG_DIR": "${workspaceFolder}/src/config",
+          "NODE_ENV": "production"  
+        },
+        "runtimeExecutable": "/Users/goran/.deno/bin/deno",
+        "runtimeArgs": [
+            "run",
+            // "--unstable",
+            "--inspect-wait",
+            "--allow-all",
+            "--unsafely-ignore-certificate-errors",
+        ],
+        "args": [
+          "--configfile",
+          "config/production.yaml",
+          // "config/production_template.yaml",
+          // "--new-relic-account-name",
+          // "'First NR account'",
+          // "--new-relic-account-id",
+          // "ACCOUNTID",
+          // "--new-relic-api-key",
+          // "APIKEY",
+  
+          // "-c",
+          // "./config/config-gen-api-docs.yaml",
+          // "--no-qs-connection"
+        ],
+        "attachSimplePort": 9229
+    },
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Debug using Node.js",
       "program": "${workspaceFolder}/src/butler.js",
       // "runtimeVersion": "20",
       "runtimeVersion": "18",

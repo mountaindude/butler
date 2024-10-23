@@ -1,8 +1,8 @@
 import httpErrors from 'http-errors';
 import enigma from 'enigma.js';
 import WebSocket from 'ws';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import upath from 'upath';
 
 // Load global variables and functions

@@ -1,9 +1,9 @@
 import QrsInteract from 'qrs-interact';
 import axios from 'axios';
-import https from 'https';
+import https from 'node:https';
 import { Duration, DateTime } from 'luxon';
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs';
 import globals from '../../globals.js';
 
 const taskStatusLookup = {
@@ -34,6 +34,7 @@ function compareTaskDetails(a, b) {
 
 // eslint-disable-next-line no-unused-vars
 function delay(milliseconds) {
+    console.log('timeout 3');
     return new Promise((resolve) => {
         setTimeout(resolve, milliseconds);
     });

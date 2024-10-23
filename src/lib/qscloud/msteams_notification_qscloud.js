@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 
 import { Webhook, SimpleTextCard } from 'ms-teams-wrapper';
 import handlebars from 'handlebars';

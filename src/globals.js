@@ -1,13 +1,13 @@
-import os from 'os';
-import crypto from 'crypto';
+import os from 'node:os';
+import crypto from 'node:crypto';
 import fs from 'fs-extra';
 import upath from 'upath';
 import Influx from 'influx';
 import si from 'systeminformation';
 import isUncPath from 'is-unc-path';
 import winston from 'winston';
-import { fileURLToPath } from 'url';
-import { readFileSync } from 'fs';
+import { fileURLToPath } from 'node:url';
+import { readFileSync } from 'node:fs';
 import { Command, Option } from 'commander';
 import 'winston-daily-rotate-file';
 
@@ -274,7 +274,7 @@ class Settings {
             this.logger.debug('CONFIG: API doc mode=off');
             // Deep copy of headers object
             const httpHeadersEngine = JSON.parse(JSON.stringify(this.config.get('Butler.configEngine.headers')));
-            
+
             //  Engine config
             this.configEngine = {
                 engineVersion: this.config.get('Butler.configEngine.engineVersion'),
@@ -289,7 +289,7 @@ class Settings {
 
             // Deep copy of headers object
             const httpHeadersQRS = JSON.parse(JSON.stringify(this.config.get('Butler.configQRS.headers')));
-            
+
             // QRS config
             this.configQRS = {
                 authentication: this.config.get('Butler.configQRS.authentication'),
@@ -525,29 +525,80 @@ class Settings {
             const siMem = await si.mem();
             const siOS = await si.osInfo();
             const siDocker = await si.dockerInfo();
-            const siNetwork = await si.networkInterfaces();
-            const siNetworkDefault = await si.networkInterfaceDefault();
 
-            const defaultNetworkInterface = siNetworkDefault;
+            // Does not work in Deno
+            // const siNetwork = await si.networkInterfaces();
+            // const siNetworkDefault = await si.networkInterfaceDefault();
+            // const defaultNetworkInterface = siNetworkDefault;
 
-            // Get info about all available network interfaces
-            const networkInterface = siNetwork.filter((item) => item.iface === defaultNetworkInterface);
+            // // Get info about all available network interfaces
+            // const networkInterface = siNetwork.filter((item) => item.iface === defaultNetworkInterface);
 
-            // Loop through all network interfaces, find the first one with a MAC address
-            // and use that to generate a unique ID for this Butler instance
+            // // Loop through all network interfaces, find the first one with a MAC address
+            // // and use that to generate a unique ID for this Butler instance
+            // let id = '';
+            // for (let i = 0; i < networkInterface.length; ) {
+            //     if (networkInterface[i].mac !== '') {
+            //         const idSrc =
+            //             networkInterface[i].mac + networkInterface[i].ip4 + this.config.get('Butler.configQRS.host') + siSystem.uuid;
+            //         const salt = networkInterface[i].mac;
+            //         const hash = crypto.createHmac('sha256', salt);
+            //         hash.update(idSrc);
+            //         id = hash.digest('hex');
+            //         break;
+            //     }
+            //     i += 1;
+            // }
+
+            // Get MAC address of default network interface. Use info from os.networkInterfaces()
+            // That function returns an array of objects, each object representing a network interface
+            // We're interested in
+            // - MAC address should be non-empty
+            // - MAC address is not 00:00:00:00:00:00
+            // - internal flag is false (i.e. not a loopback interface)
+            const networkInterfaces = os.networkInterfaces();
+            let networkIf = null;
+            let networkIfName = '';
+
             let id = '';
-            for (let i = 0; i < networkInterface.length; ) {
-                if (networkInterface[i].mac !== '') {
-                    const idSrc =
-                        networkInterface[i].mac + networkInterface[i].ip4 + this.config.get('Butler.configQRS.host') + siSystem.uuid;
-                    const salt = networkInterface[i].mac;
-                    const hash = crypto.createHmac('sha256', salt);
-                    hash.update(idSrc);
-                    id = hash.digest('hex');
-                    break;
+            Object.keys(networkInterfaces).forEach((key) => {
+                const networkInterface = networkInterfaces[key];
+                // networkInterface is an array of objects, each object representing a network interface with properties
+                // - address
+                // - netmask
+                // - family
+                // - mac
+                // - internal
+                // - cidr
+                // - scopeid (only for IPv6)
+
+                // Check all network interfaces, find the first one with a MAC address meeting above criteria
+                // Use that to generate a unique ID for this Butler instance
+                for (const item of networkInterface) {
+                    if (
+                        item.mac !== undefined &&
+                        item.mac !== null &&
+                        item.mac !== '' &&
+                        item.mac !== '00:00:00:00:00:00' &&
+                        item.internal === false
+                    ) {
+                        networkIf = item;
+                        networkIfName = key;
+                        // Create a unique ID for this Butler instance
+                        const idSrc = item.mac + item.address + this.config.get('Butler.configQRS.host') + siSystem.uuid;
+                        const salt = item.mac;
+                        const hash = crypto.createHmac('sha256', salt);
+                        hash.update(idSrc);
+                        id = hash.digest('hex');
+                        break;
+                    }
                 }
-                i += 1;
-            }
+
+                // Break out of outer loop if we found a MAC address
+                if (id !== '') {
+                    return;
+                }
+            });
 
             // If no MAC address was found, use either of
             // - siOS.serial
@@ -602,8 +653,8 @@ class Settings {
                         total: siMem.total,
                     },
                     os: siOS,
-                    network: siNetwork,
-                    networkDefault: siNetworkDefault,
+                    network: networkIf,
+                    networkDefault: networkIfName,
                     docker: siDocker,
                 },
             };
@@ -690,6 +741,7 @@ class Settings {
 
     // Static sleep function
     static sleep(ms) {
+        console.log('timeout 2');
         // eslint-disable-next-line no-promise-executor-return
         return new Promise((resolve) => setTimeout(resolve, ms));
     }

@@ -1,8 +1,8 @@
 import mqtt from 'mqtt';
 import { validate } from 'uuid';
-import fs from 'fs';
+import fs from 'node:fs';
 import upath from 'upath';
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'node:url';
 
 // Load global variables and functions
 // import { globals, config, logger } from '../globals.js';

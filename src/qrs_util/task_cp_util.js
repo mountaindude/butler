@@ -1,5 +1,10 @@
-import path from 'path';
+import path from 'node:path';
 import QrsInteract from 'qrs-interact';
+import axios from 'axios';
+// import https from 'node:https';
+// import fs from 'node:fs';
+// import { Agent } from 'undici';
+
 import globals from '../globals.js';
 
 /**
@@ -115,31 +120,124 @@ export async function getReloadTasksCustomProperties(config, configQRS, logger) 
     logger.debug('GETRELOADTASKSCP: Retrieving all custom properties that are available for reload tasks');
 
     try {
-        const cfg = {
-            hostname: config.get('Butler.configQRS.host'),
-            portNumber: 4242,
-            certificates: {
-                certFile: configQRS.certPaths.certPath,
-                keyFile: configQRS.certPaths.keyPath,
-            },
-        };
 
-        cfg.headers = {
-            'X-Qlik-User': 'UserDirectory=Internal; UserId=sa_repository',
-        };
+        // Set env  variables
+        // process.env.NODE_EXTRA_CA_CERTS = '/Users/goran/code/secret/pro2win1-nopwd/root.pem';
 
-        const qrsInstance = new QrsInteract(cfg);
+        // Add x-qlik-xrfkey to headers
+        const httpHeaders = {};
+        httpHeaders['X-Qlik-Xrfkey'] = 'abcdefghijklmnop';
+        httpHeaders['X-Qlik-User'] = 'UserDirectory=Internal;UserId=sa_repository';
+
+        // const url = `https://${globals.configQRS.host}:${globals.configQRS.port}/qrs/custompropertydefinition/full?filter=objectTypes eq 'ReloadTask'&xrfkey=abcdefghijklmnop`;
+        const url = `https://${globals.configQRS.host}:${globals.configQRS.port}/qrs/custompropertydefinition/full?filter=objectTypes eq 'ReloadTask'&xrfkey=abcdefghijklmnop`;
+        // const url = `https://pro2-win1.lab.ptarmiganlabs.net:4242/qrs/about?xrfkey=abcdefghijklmnop`;
+
+        const cert = await Deno.readTextFile('/Users/goran/code/secret/pro2win1-nopwd/client.pem');
+        const key = await Deno.readTextFile('/Users/goran/code/secret/pro2win1-nopwd/client_key.pem');
+        const caCert = await Deno.readTextFile('/Users/goran/code/secret/pro2win1-nopwd/root.pem');
+        const denoClient = Deno.createHttpClient({ key, cert, caCerts: [caCert] });
+        const response = await fetch(url, {
+            headers: httpHeaders,
+            client: denoClient,
+        });
+
+        const result = await response.json();
+
+
+
+
+        // // Works in Node, but not in Deno
+        // // const url = `https://${globals.configQRS.host}:${globals.configQRS.port}/qrs/about?xrfkey=abcdefghijklmnop`;
+
+        // const response = await fetch(url, {
+        //     method: 'GET',
+        //     headers: httpHeaders,
+        //     // headers: {
+        //     //     'X-Qlik-Xrfkey': 'abcdefghijklmnop',
+        //     //     'X-Qlik-User': 'UserDirectory=Internal;UserId=sa_repository',
+        //     // },
+        //     dispatcher: new Agent({
+        //         connect: {
+        //             cert: fs.readFileSync('/Users/goran/code/secret/pro2win1-nopwd/client.pem'),
+        //             key: fs.readFileSync('/Users/goran/code/secret/pro2win1-nopwd/client_key.pem'),
+        //             ca: fs.readFileSync('/Users/goran/code/secret/pro2win1-nopwd/root.pem'),
+        //         },
+        //     }),
+        // });
+
+        const r = response.status;
+
+
+
+
+        // const httpsAgent = new https.Agent({
+        //     // rejectUnauthorized: globals.config.get('Butler.configQRS.rejectUnauthorized'),
+        //     // rejectUnauthorized: false,
+        //     rejectUnauthorized: false,
+        //     cert: fs.readFileSync('/Users/goran/code/secret/pro2win1-nopwd/client.pem'),
+        //     key: fs.readFileSync('/Users/goran/code/secret/pro2win1-nopwd/client_key.pem'),
+        //     // ca: fs.readFileSync('/Users/goran/code/secret/pro2win1-nopwd/root.pem'),
+
+        //     // cert: fs.readFileSync('/Users/goran/parallels_sync/pro2-win2.lab.ptarmiganlabs.net/client.pem'),
+        //     // key: fs.readFileSync('/Users/goran/parallels_sync/pro2-win2.lab.ptarmiganlabs.net/client_key.pem'),
+        //     // ca: fs.readFileSync('/Users/goran/parallels_sync/pro2-win2.lab.ptarmiganlabs.net/root.pem'),
+        //     // cert: globals.configQRS.cert,
+        //     // key: globals.configQRS.key,
+        //     // ca: globals.configQRS.ca,
+
+        //     // passphrase: '',
+        // });
+
+        // const axiosConfig = {
+        //     // url: `/qrs/custompropertydefinition/full?filter=objectTypes eq 'ReloadTask'&xrfkey=abcdefghijklmnop`,
+        //     url: `/qrs/about`,
+        //     params: {
+        //         xrfkey: 'abcdefghijklmnop',
+        //     },
+        //     method: 'get',
+        //     // baseURL: `https://${globals.configQRS.host}:${globals.configQRS.port}`,
+        //     // baseURL: `https://192.168.100.109:4242`,
+        //     baseURL: `https://pro2-win1.lab.ptarmiganlabs.net:4242`,
+        //     headers: httpHeaders,
+        //     timeout: 10000,
+        //     responseType: 'json',
+        //     httpsAgent,
+        // };
+
+        // const result = await axios.request(axiosConfig);
+
+
+
+
+
+
+        // const cfg = {
+        //     hostname: config.get('Butler.configQRS.host'),
+        //     portNumber: 4242,
+        //     certificates: {
+        //         certFile: configQRS.certPaths.certPath,
+        //         keyFile: configQRS.certPaths.keyPath,
+        //         ca: configQRS.certPaths.caPath,
+        //     },
+        // };
+
+        // cfg.headers = {
+        //     'X-Qlik-User': 'UserDirectory=Internal; UserId=sa_repository',
+        // };
+
+        // const qrsInstance = new QrsInteract(cfg);
 
         // Get info about the task
         try {
             logger.debug('GETRELOADTASKSCP: custompropertydefinition/full?filter=objectType eq ReloadTask');
 
-            const result = await qrsInstance.Get(`custompropertydefinition/full?filter=objectTypes eq 'ReloadTask'`);
+            // const result = await qrsInstance.Get(`custompropertydefinition/full?filter=objectTypes eq 'ReloadTask'`);
             logger.debug(`GETRELOADTASKSCP: Got response: ${result.statusCode} for CP`);
 
-            if (result.body.length > 0) {
+            if (result.length > 0) {
                 // At least one CP exists for reload tasks.
-                return result.body;
+                return result;
             }
 
             // The task and/or the CP does not exist
@@ -150,6 +248,12 @@ export async function getReloadTasksCustomProperties(config, configQRS, logger) 
         }
     } catch (err) {
         logger.error(`GETRELOADTASKSCP: Error while getting CP: ${err}`);
+
+        // Log stack trace if log level is verbose, debug or silly
+        const logLevel = globals.getLoggingLevel();
+        if (logLevel === 'verbose' || logLevel === 'debug' || logLevel === 'silly') {
+            logger.error(`GETRELOADTASKSCP: ${err.stack}`);
+        }
         return false;
     }
 }

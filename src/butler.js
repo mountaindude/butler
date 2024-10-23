@@ -1,6 +1,5 @@
-/* eslint-disable import/first */
 // Add dependencies
-import dgram from 'dgram';
+import dgram from 'node:dgram';
 
 // Suppress experimental warnings
 // https://stackoverflow.com/questions/55778283/how-to-disable-warnings-when-node-is-launched-via-a-global-shell-script
@@ -99,6 +98,7 @@ const start = async () => {
     // Sleep 5 seconds otherwise to llow globals to be initialised
 
     function sleepLocal(ms) {
+        console.log('timeout 1');
         // eslint-disable-next-line no-promise-executor-return
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
