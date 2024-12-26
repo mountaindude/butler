@@ -96,7 +96,7 @@
         "qrs-interact": "^6.3.1",
         "rate-limiter-flexible": "^5.0.4",
         "serializeapp": "^3.0.0",
-        "systeminformation": "^5.23.5",
+        "systeminformation": "^5.23.8",
         "upath": "^2.0.1",
         "uuid": "^11.0.3",
         "winston": "^3.17.0",
