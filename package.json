@@ -69,7 +69,7 @@
         "email-validator": "^2.0.4",
         "enigma.js": "^2.14.0",
         "express-handlebars": "^7.1.3",
-        "fastify": "^4.28.1",
+        "fastify": "^4.29.1",
         "fastify-healthcheck": "^4.4.0",
         "fastify-plugin": "^4.5.0",
         "fs-extra": "^11.2.0",
