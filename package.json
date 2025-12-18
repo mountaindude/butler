@@ -99,7 +99,7 @@
         "posthog-node": "^5.9.5",
         "promise": "^8.3.0",
         "rate-limiter-flexible": "^8.0.1",
-        "systeminformation": "^5.27.11",
+        "systeminformation": "^5.27.14",
         "upath": "^2.0.1",
         "uuid": "^13.0.0",
         "winston": "^3.18.3",
